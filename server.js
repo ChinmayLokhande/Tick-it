@@ -1,16 +1,23 @@
-const express = require("express");
-const dotenv = require("dotenv").config();
+require("dotenv").config();
 
-const app = express();
+const app = require("./app");
+const connectDB = require("./config/database");
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3000;
 
-app.get("/", (req, res) => {
-    res.json({
-        message: "Tick-It server is running 🚀"
-    });
-});
+const startServer = async () => {
+    try {
+        await connectDB();
 
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-});
+        app.listen(PORT, () => {
+            console.log(`Server running on http://localhost:${PORT}`);
+        });
+    } catch (error) {
+        console.error("Server startup failed.");
+        console.error(`Reason: ${error.message}`);
+
+        process.exit(1);
+    }
+};
+
+startServer();
