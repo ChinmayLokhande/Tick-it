@@ -37,6 +37,12 @@ const ticketSchema = new mongoose.Schema(
             default: "OPEN"
         },
 
+        comments: {
+            type: String,
+            trim: true,
+            default: null
+        },
+
         customer: {
             name: {
                 type: String,

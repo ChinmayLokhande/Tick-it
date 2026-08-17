@@ -19,9 +19,9 @@ const createTicket = async (req, res) => {
     }
 };
 
-const getTickets = async (req, res, next) => {
+const getTickets = async (req, res) => {
     try {
-        const tickets = await ticketService.getTickets();
+        const tickets = await ticketService.getTickets(req.query);
 
         res.status(200).json({
             success: true,
@@ -29,7 +29,12 @@ const getTickets = async (req, res, next) => {
             data: tickets
         });
     } catch (error) {
-        next(error);
+        console.error(error);
+
+        res.status(error.statusCode || 500).json({
+            success: false,
+            message: error.message || "Internal server error"
+        });
     }
 };
 
@@ -51,8 +56,31 @@ const getTicketById = async (req, res) => {
     }
 };
 
+const updateTicket = async (req, res) => {
+    try {
+        const ticket = await ticketService.updateTicket(
+            req.params.id,
+            req.body
+        );
+
+        res.status(200).json({
+            success: true,
+            message: "Ticket updated successfully",
+            data: ticket
+        });
+    } catch (error) {
+        console.error(error);
+
+        res.status(error.statusCode || 500).json({
+            success: false,
+            message: error.message || "Internal server error"
+        });
+    }
+};
+
 module.exports = {
     createTicket,
     getTickets,
-    getTicketById
+    getTicketById,
+    updateTicket
 };
