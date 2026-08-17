@@ -2,6 +2,11 @@ const mongoose = require("mongoose");
 
 const ticketSchema = new mongoose.Schema(
     {
+        ticketId: {
+            type: String,
+            unique: true,
+            required: true
+        },
         title: {
             type: String,
             required: true,

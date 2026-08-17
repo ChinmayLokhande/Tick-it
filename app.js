@@ -8,7 +8,7 @@ app.use(express.json());
 
 app.get("/", (req, res) => {
     res.json({
-        message: "Tick-It server is running 🚀"
+        message: "Tick-It server is running"
     });
 });
 
