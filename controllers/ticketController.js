@@ -1,4 +1,5 @@
 const ticketService = require("../services/ticketService");
+const aiService = require("../services/aiService");
 
 const createTicket = async (req, res) => {
     try {
@@ -78,9 +79,38 @@ const updateTicket = async (req, res) => {
     }
 };
 
+const generateTicketSummary = async (req, res) => {
+    try {
+        const ticket = await ticketService.getTicketById(req.params.id);
+
+        const summary = await aiService.generateTicketSummary(ticket);
+
+        ticket.ai.summary = summary;
+
+        await ticket.save();
+
+        res.status(200).json({
+            success: true,
+            message: "Ticket summary generated successfully",
+            data: {
+                ticketId: ticket.ticketId,
+                summary: ticket.ai.summary
+            }
+        });
+    } catch (error) {
+        console.error(error);
+
+        res.status(error.statusCode || 500).json({
+            success: false,
+            message: error.message || "Internal server error"
+        });
+    }
+};
+
 module.exports = {
     createTicket,
     getTickets,
     getTicketById,
-    updateTicket
+    updateTicket,
+    generateTicketSummary
 };
